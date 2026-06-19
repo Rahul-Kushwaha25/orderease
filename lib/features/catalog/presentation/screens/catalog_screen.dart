@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:orderease/core/localization/l10n/app_localizations.dart';
 import '../bloc/catalog_bloc.dart';
 import '../bloc/catalog_event.dart';
 import '../bloc/catalog_state.dart';
@@ -22,25 +23,54 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9F7),
       appBar: AppBar(
-        title: const Text('Item Catalog'),
+        backgroundColor: const Color(0xFFF8F9F7),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Color(0xFF1E6F5C)),
+          onPressed: () {},
+        ),
+        title: Text(
+          l10n.catalogTitle,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Color(0xFF1E6F5C),
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF1E6F5C)),
+            onPressed: () {},
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF1E6F5C),
+        foregroundColor: Colors.white,
+        elevation: 4,
         onPressed: () {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
+            backgroundColor: Colors.white,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
             builder: (_) => const AddItemBottomSheet(),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, size: 28),
       ),
       body: BlocConsumer<CatalogBloc, CatalogState>(
         listener: (context, state) {
           if (state is CatalogItemOperationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Operation Successful!')),
+              SnackBar(content: Text(l10n.localeName == 'hi' ? 'सफलतापूर्वक कार्य संपन्न हुआ!' : 'Operation Successful!')),
             );
           } else if (state is CatalogError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -54,17 +84,17 @@ class _CatalogScreenState extends State<CatalogScreen> {
           } else if (state is CatalogLoaded) {
             final items = state.items;
             if (items.isEmpty) {
-              return const Center(child: Text('No items in catalog. Tap + to add!'));
+              return Center(child: Text(l10n.noItemsMessage));
             }
             return ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 80),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 return ItemCard(item: items[index]);
               },
             );
           }
-          return const Center(child: Text('Press refresh or add items.'));
+          return Center(child: Text(l10n.localeName == 'hi' ? 'आइटम लोड करने के लिए रीफ्रेश करें' : 'Press refresh or add items.'));
         },
       ),
     );

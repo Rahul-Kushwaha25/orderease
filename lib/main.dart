@@ -33,7 +33,7 @@ void main() async {
       messagingSenderId: "435477027051",
       projectId: "com.titan.orderease",
     ),
-  );
+  ); // Ensure you have defaultFirebaseOptions defined
   await configureDependencies();
   try {
     await sl<DeleteExpiredOrdersUseCase>()(); // cleanup on launch

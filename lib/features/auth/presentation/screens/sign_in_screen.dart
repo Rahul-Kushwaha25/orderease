@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:orderease/core/localization/l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -9,6 +10,7 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Center(
         child: Padding(
@@ -16,17 +18,17 @@ class SignInScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.shopping_basket, size: 80, color: Colors.green),
+              const Icon(Icons.shopping_basket, size: 80, color: Color(0xFF1E6F5C)),
               const SizedBox(height: 16),
-              const Text(
-                'DukaanOrder',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              Text(
+                l10n.appName,
+                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1A302B)),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Order stock for your Kirana shop instantly on WhatsApp!',
+              Text(
+                l10n.signInTitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey),
               ),
               const SizedBox(height: 48),
               BlocConsumer<AuthBloc, AuthState>(
@@ -43,13 +45,15 @@ class SignInScreen extends StatelessWidget {
                   }
                   return ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1E6F5C),
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                     onPressed: () {
                       context.read<AuthBloc>().add(const SignInRequested());
                     },
                     icon: const Icon(Icons.login),
-                    label: const Text('Sign In with Google'),
+                    label: Text(l10n.signInButton),
                   );
                 },
               ),

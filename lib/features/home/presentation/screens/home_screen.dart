@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/localization/l10n/app_localizations.dart';
+import 'package:orderease/core/localization/l10n/app_localizations.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/constants/icon_constants.dart';
 import '../../../order/domain/entities/order_line_item_entity.dart';
@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF8F9F7),
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
               shopName = profileState.profile.shopName;
             }
             return Text(
-             shopName,
+              shopName,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
@@ -104,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 icon: const Icon(Icons.shopping_bag_outlined, size: 20),
                 label: Text(
-                  'Preview Order (${state.cartCount} items)',
+                  '${l10n.previewOrderButton} (${state.cartCount})',
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -120,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is HomeLoaded) {
             final items = state.items;
             if (items.isEmpty) {
-              return const Center(child: Text('No catalog stock. Go to Catalog and add.'));
+              return Center(child: Text(l10n.noItemsMessage));
             }
 
             if (state.isGrouped) {
@@ -178,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           }
-          return const Center(child: Text('Press refresh.'));
+          return Center(child: Text(l10n.loadingMessage));
         },
       ),
     );
@@ -341,12 +342,16 @@ class _ItemCard extends StatelessWidget {
   final VoidCallback onAdd;
   final VoidCallback onRemove;
 
-  String _formatUnit(String unit) {
+  String _formatUnit(BuildContext context, String unit) {
+    final l10n = AppLocalizations.of(context)!;
     final lower = unit.toLowerCase();
-    if (lower == 'kg') return '1kg';
-    if (lower == 'litre') return '1L';
+    if (lower == 'kg') return l10n.localeName == 'hi' ? '1 किलोग्राम' : '1kg';
+    if (lower == 'litre') return l10n.localeName == 'hi' ? '1 लीटर' : '1L';
     if (lower == 'ml') return '500ml';
     if (lower == 'gram') return '500g';
+    if (lower == 'unit') return l10n.unitUnit;
+    if (lower == 'packet') return l10n.unitPacket;
+    if (lower == 'dozen') return l10n.unitDozen;
     return unit;
   }
 
@@ -399,7 +404,7 @@ class _ItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _formatUnit(item.unit),
+                    _formatUnit(context, item.unit),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[500],
@@ -419,4 +424,3 @@ class _ItemCard extends StatelessWidget {
     );
   }
 }
-

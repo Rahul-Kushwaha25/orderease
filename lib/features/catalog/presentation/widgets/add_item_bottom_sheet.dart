@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:orderease/core/localization/l10n/app_localizations.dart';
+import '../../../../core/constants/icon_constants.dart';
 import '../../domain/entities/item_entity.dart';
 import '../bloc/catalog_bloc.dart';
 import '../bloc/catalog_event.dart';
@@ -21,6 +23,16 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
   late String _category;
   late String _iconId;
 
+  final List<String> _units = ['kg', 'litre', 'unit', 'packet', 'gram', 'ml', 'dozen'];
+
+  final List<String> _selectableIcons = [
+    'ic_fruits',
+    'ic_oil',
+    'ic_grain',
+    'ic_beverages',
+    'ic_bakery',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -28,17 +40,33 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
     _price = widget.item?.price ?? 0.0;
     _unit = widget.item?.unit ?? 'kg';
     _category = widget.item?.category ?? 'Dairy';
-    _iconId = widget.item?.iconId ?? 'ic_dairy';
+    _iconId = widget.item?.iconId ?? 'ic_fruits';
+  }
+
+  String _getCategoryFromIcon(String iconId) {
+    if (iconId == 'ic_fruits' || iconId == 'ic_vegetables' || iconId == 'ic_spices') {
+      return 'Spices';
+    } else if (iconId == 'ic_dairy' || iconId == 'ic_oil') {
+      return 'Dairy';
+    } else if (iconId == 'ic_grain') {
+      return 'Grain';
+    } else if (iconId == 'ic_beverages' || iconId == 'ic_snacks') {
+      return 'Beverages';
+    } else if (iconId == 'ic_bakery') {
+      return 'Grain';
+    }
+    return 'Dairy';
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        left: 20,
+        right: 20,
+        top: 10,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
       child: Form(
         key: _formKey,
@@ -47,57 +75,202 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                widget.item == null ? 'Add Stock Item' : 'Edit Item',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[350],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
               ),
-              const SizedBox(height: 12),
+              Text(
+                widget.item == null ? l10n.addItemButton : l10n.editItemButton,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1A302B),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                l10n.itemNameLabel,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF555555),
+                ),
+              ),
+              const SizedBox(height: 8),
               TextFormField(
                 initialValue: _name,
-                decoration: const InputDecoration(labelText: 'Item Name'),
+                decoration: InputDecoration(
+                  hintText: 'e.g. Sugar',
+                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  fillColor: const Color(0xFFF1F3F0),
+                  filled: true,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
                 validator: (val) => val == null || val.isEmpty ? 'Please enter name' : null,
                 onSaved: (val) => _name = val ?? '',
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
+              Text(
+                l10n.localeName == 'hi' ? 'मूल्य' : 'Price',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF555555),
+                ),
+              ),
+              const SizedBox(height: 8),
               TextFormField(
                 initialValue: _price > 0 ? _price.toString() : '',
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Price (₹)'),
+                decoration: InputDecoration(
+                  hintText: '0.00',
+                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(left: 16, right: 8, top: 12),
+                    child: Text(
+                      '₹ ',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1E6F5C)),
+                    ),
+                  ),
+                  fillColor: const Color(0xFFF1F3F0),
+                  filled: true,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
                 validator: (val) => val == null || double.tryParse(val) == null ? 'Please enter price' : null,
                 onSaved: (val) => _price = double.parse(val ?? '0.0'),
               ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                value: _unit,
-                items: const [
-                  DropdownMenuItem(value: 'kg', child: Text('kg')),
-                  DropdownMenuItem(value: 'gram', child: Text('gram')),
-                  DropdownMenuItem(value: 'litre', child: Text('litre')),
-                  DropdownMenuItem(value: 'ml', child: Text('ml')),
-                  DropdownMenuItem(value: 'unit', child: Text('unit')),
-                  DropdownMenuItem(value: 'packet', child: Text('packet')),
-                  DropdownMenuItem(value: 'dozen', child: Text('dozen')),
-                ],
-                onChanged: (val) => setState(() => _unit = val ?? 'kg'),
-                decoration: const InputDecoration(labelText: 'Unit'),
+              const SizedBox(height: 16),
+              Text(
+                l10n.localeName == 'hi' ? 'मापने की इकाई' : 'Unit',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF555555),
+                ),
               ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                value: _category,
-                items: const [
-                  DropdownMenuItem(value: 'Dairy', child: Text('Dairy')),
-                  DropdownMenuItem(value: 'Grain', child: Text('Grain')),
-                  DropdownMenuItem(value: 'Snacks', child: Text('Snacks')),
-                  DropdownMenuItem(value: 'Beverages', child: Text('Beverages')),
-                  DropdownMenuItem(value: 'Spices', child: Text('Spices')),
-                ],
-                onChanged: (val) => setState(() => _category = val ?? 'Dairy'),
-                decoration: const InputDecoration(labelText: 'Category'),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 38,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _units.length,
+                  itemBuilder: (context, index) {
+                    final unitOpt = _units[index];
+                    final isSelected = _unit == unitOpt;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _unit = unitOpt;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFFEFF1EE),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: Text(
+                            unitOpt,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : const Color(0xFF555555),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _saveForm,
-                child: const Text('Save Item'),
+              const SizedBox(height: 16),
+              Text(
+                l10n.localeName == 'hi' ? 'आइकन चुनें' : 'Select Icon',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF555555),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 56,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _selectableIcons.length,
+                  itemBuilder: (context, index) {
+                    final iconOpt = _selectableIcons[index];
+                    final iconConfig = IconConstants.getIconConfig(iconOpt);
+                    final isSelected = _iconId == iconOpt;
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _iconId = iconOpt;
+                          _category = _getCategoryFromIcon(iconOpt);
+                        });
+                      },
+                      child: Container(
+                        width: 52,
+                        height: 52,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFFEFF1EE),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xFF1E6F5C).withOpacity(0.3),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  )
+                                ]
+                              : null,
+                        ),
+                        child: Icon(
+                          iconConfig.icon,
+                          color: isSelected ? Colors.white : const Color(0xFF555555),
+                          size: 24,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 28),
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1E6F5C),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    elevation: 2,
+                  ),
+                  onPressed: _saveForm,
+                  child: Text(
+                    l10n.localeName == 'hi' ? 'सहेजें' : 'Save Item',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),
