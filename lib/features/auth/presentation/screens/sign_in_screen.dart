@@ -11,6 +11,8 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    debugPrint("SignInScreen built with theme: ${theme.brightness}");
     return Scaffold(
       body: Center(
         child: Padding(
@@ -18,25 +20,39 @@ class SignInScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.shopping_basket, size: 80, color: Color(0xFF1E6F5C)),
+              (theme.brightness == Brightness.dark)
+                  ? Image.asset(
+                      "assets/orderease_light_logo.png",
+                      width: 100,
+                      height: 100,
+                    )
+                  : Image.asset(
+                      "assets/orderease_logo.png",
+                      width: 100,
+                      height: 100,
+                    ),
               const SizedBox(height: 16),
               Text(
                 l10n.appName,
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF1A302B)),
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 l10n.signInTitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
+                style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 48),
               BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is AuthError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
                   }
                 },
                 builder: (context, state) {
@@ -45,9 +61,12 @@ class SignInScreen extends StatelessWidget {
                   }
                   return ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E6F5C),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                     ),
                     onPressed: () {
                       context.read<AuthBloc>().add(const SignInRequested());

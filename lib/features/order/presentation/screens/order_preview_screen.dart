@@ -20,22 +20,23 @@ class OrderPreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double totalPrice = items.fold(0.0, (sum, item) => sum + item.lineTotal);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = theme.colorScheme.primary;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9F7),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF8F9F7),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF1E6F5C)),
+          icon: Icon(Icons.arrow_back, color: primaryColor),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Order Preview',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Color(0xFF1A302B),
+            color: theme.colorScheme.onSurface,
           ),
         ),
         centerTitle: true,
@@ -79,12 +80,12 @@ class OrderPreviewScreen extends StatelessWidget {
                       supplierPhone: supplierPhone,
                     ),
                     const SizedBox(height: 20),
-                    const Text(
+                    Text(
                       'ITEMS',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: theme.colorScheme.onSurfaceVariant,
                         letterSpacing: 1.1,
                       ),
                     ),
@@ -101,27 +102,27 @@ class OrderPreviewScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC8E6C9),
+                        color: isDark ? theme.colorScheme.primaryContainer : const Color(0xFFC8E6C9),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFF81C784).withOpacity(0.5)),
+                        border: Border.all(color: isDark ? theme.colorScheme.primary.withOpacity(0.2) : const Color(0xFF81C784).withOpacity(0.5)),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Total',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E6F5C),
+                              color: isDark ? theme.colorScheme.onPrimaryContainer : const Color(0xFF1E6F5C),
                             ),
                           ),
                           Text(
                             '₹${totalPrice.toStringAsFixed(0)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E6F5C),
+                              color: isDark ? theme.colorScheme.onPrimaryContainer : const Color(0xFF1E6F5C),
                             ),
                           ),
                         ],
@@ -136,18 +137,18 @@ class OrderPreviewScreen extends StatelessWidget {
                             height: 50,
                             child: OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Color(0xFFB0BEC5)),
+                                side: BorderSide(color: theme.colorScheme.outline),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
                               ),
-                              icon: const Icon(Icons.copy, color: Color(0xFF555555), size: 18),
-                              label: const Text(
+                              icon: Icon(Icons.copy, color: theme.colorScheme.onSurface, size: 18),
+                              label: Text(
                                 'Copy',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF555555),
+                                  color: theme.colorScheme.onSurface,
                                 ),
                               ),
                               onPressed: () {
@@ -244,14 +245,17 @@ class _StoreHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('dd MMM yyyy').format(DateTime.now());
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -270,26 +274,26 @@ class _StoreHeaderCard extends StatelessWidget {
                   children: [
                     Text(
                       shopName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E6F5C),
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.calendar_today_outlined,
                           size: 14,
-                          color: Color(0xFF757575),
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           formattedDate,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Color(0xFF555555),
+                            color: theme.colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -300,34 +304,34 @@ class _StoreHeaderCard extends StatelessWidget {
                 Container(
                   width: 44,
                   height: 44,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE8F5E9),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.green[900]!.withOpacity(0.3) : const Color(0xFFE8F5E9),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.storefront_outlined,
-                    color: Color(0xFF1E6F5C),
+                    color: theme.colorScheme.primary,
                     size: 22,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            const Divider(color: Color(0xFFEFF1EE), height: 1),
+            Divider(color: isDark ? Colors.grey[800] : const Color(0xFFEFF1EE), height: 1),
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.phone_outlined,
                   size: 18,
-                  color: Color(0xFF1E6F5C),
+                  color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   supplierPhone,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF1A302B),
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -347,14 +351,18 @@ class _PreviewItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -368,12 +376,12 @@ class _PreviewItemCard extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: const Color(0xFFF1F3F0),
+                color: isDark ? Colors.grey[850]! : const Color(0xFFF1F3F0),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.inventory_2_outlined,
-                color: Color(0xFF757575),
+                color: theme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
             ),
@@ -384,10 +392,10 @@ class _PreviewItemCard extends StatelessWidget {
                 children: [
                   Text(
                     item.itemName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1A302B),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -395,7 +403,7 @@ class _PreviewItemCard extends StatelessWidget {
                     '${item.quantity} ${item.unit}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey[500],
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -406,25 +414,25 @@ class _PreviewItemCard extends StatelessWidget {
               children: [
                 Text(
                   '₹${item.lineTotal.toStringAsFixed(0)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E6F5C),
+                    color: theme.colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEFF1EE),
+                    color: isDark ? Colors.grey[850]! : const Color(0xFFEFF1EE),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     'x${item.quantity}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF555555),
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),

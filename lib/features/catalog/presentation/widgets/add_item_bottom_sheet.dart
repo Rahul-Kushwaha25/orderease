@@ -61,6 +61,9 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(
         left: 20,
@@ -81,35 +84,36 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[350],
+                    color: isDark ? Colors.grey[800] : Colors.grey[350],
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
               Text(
                 widget.item == null ? l10n.addItemButton : l10n.editItemButton,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1A302B),
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
                 l10n.itemNameLabel,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF555555),
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 initialValue: _name,
+                style: TextStyle(color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
                   hintText: 'e.g. Sugar',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  fillColor: const Color(0xFFF1F3F0),
+                  hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5)),
+                  fillColor: isDark ? Colors.grey[850]! : const Color(0xFFF1F3F0),
                   filled: true,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(
@@ -123,27 +127,28 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
               const SizedBox(height: 16),
               Text(
                 l10n.localeName == 'hi' ? 'मूल्य' : 'Price',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF555555),
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 initialValue: _price > 0 ? _price.toString() : '',
                 keyboardType: TextInputType.number,
+                style: TextStyle(color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
                   hintText: '0.00',
-                  hintStyle: TextStyle(color: Colors.grey[400]),
-                  prefixIcon: const Padding(
-                    padding: EdgeInsets.only(left: 16, right: 8, top: 12),
+                  hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5)),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 8, top: 12),
                     child: Text(
                       '₹ ',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1E6F5C)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
                     ),
                   ),
-                  fillColor: const Color(0xFFF1F3F0),
+                  fillColor: isDark ? Colors.grey[850]! : const Color(0xFFF1F3F0),
                   filled: true,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   border: OutlineInputBorder(
@@ -157,10 +162,10 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
               const SizedBox(height: 16),
               Text(
                 l10n.localeName == 'hi' ? 'मापने की इकाई' : 'Unit',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF555555),
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
@@ -182,14 +187,14 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
                         margin: const EdgeInsets.only(right: 8),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFFEFF1EE),
+                          color: isSelected ? theme.colorScheme.primary : (isDark ? Colors.grey[900]! : const Color(0xFFEFF1EE)),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
                           child: Text(
                             unitOpt,
                             style: TextStyle(
-                              color: isSelected ? Colors.white : const Color(0xFF555555),
+                              color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -202,10 +207,10 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
               const SizedBox(height: 16),
               Text(
                 l10n.localeName == 'hi' ? 'आइकन चुनें' : 'Select Icon',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF555555),
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 8),
@@ -231,12 +236,12 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
                         height: 52,
                         margin: const EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFFEFF1EE),
+                          color: isSelected ? theme.colorScheme.primary : (isDark ? Colors.grey[900]! : const Color(0xFFEFF1EE)),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: const Color(0xFF1E6F5C).withOpacity(0.3),
+                                    color: theme.colorScheme.primary.withOpacity(0.3),
                                     blurRadius: 6,
                                     offset: const Offset(0, 3),
                                   )
@@ -245,7 +250,7 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
                         ),
                         child: Icon(
                           iconConfig.icon,
-                          color: isSelected ? Colors.white : const Color(0xFF555555),
+                          color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
                           size: 24,
                         ),
                       ),
@@ -258,8 +263,8 @@ class _AddItemBottomSheetState extends State<AddItemBottomSheet> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E6F5C),
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),

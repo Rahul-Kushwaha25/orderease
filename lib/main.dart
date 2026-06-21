@@ -15,14 +15,7 @@ import 'features/order/presentation/bloc/order_bloc.dart';
 import 'features/order/domain/usecases/delete_expired_orders_usecase.dart';
 import 'features/profile/presentation/bloc/profile_bloc.dart';
 
-// Dummy Localizations mapping for standalone compilation checks
-// class AppLocalizations {
-//   static const localizationsDelegates = [
-//     GlobalMaterialLocalizations.delegate,
-//     GlobalWidgetsLocalizations.delegate,
-//     GlobalCupertinoLocalizations.delegate,
-//   ];
-// }
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +59,7 @@ class DukaanOrderApp extends StatelessWidget {
           return BlocBuilder<LocaleCubit, Locale>(
             builder: (context, locale) {
               return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
                 title: 'orderease',
                 theme: AppTheme.light,
                 darkTheme: AppTheme.dark,

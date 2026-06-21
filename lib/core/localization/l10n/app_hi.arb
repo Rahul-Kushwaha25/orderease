@@ -50,5 +50,12 @@
   "itemAddedMessage": "आइटम जोड़ा गया!",
   "itemUpdatedMessage": "आइटम सफलतापूर्वक अपडेट किया गया!",
   "itemDeletedMessage": "आइटम सूची से हटा दिया गया!",
-  "copiedToClipboardMessage": "ऑर्डर विवरण कॉपी कर लिया गया है!"
+  "copiedToClipboardMessage": "ऑर्डर विवरण कॉपी कर लिया गया है!",
+  "preferencesSection": "प्राथमिकताएं",
+  "languagePreference": "भाषा",
+  "themePreference": "थीम",
+  "editShopNameTitle": "दुकान का नाम संपादित करें",
+  "enterShopNameHint": "दुकान का नाम दर्ज करें",
+  "saveButton": "सहेजें",
+  "editSupplierPhoneTitle": "सप्लायर का व्हाट्सएप नंबर संपादित करें"
 }

@@ -31,26 +31,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF8F9F7),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFF1E6F5C)),
-          onPressed: () {},
-        ),
+        leading: (theme.brightness == Brightness.dark)
+            ? Image.asset("assets/orderease_light_logo.png", width: 28, height: 28)
+            : Image.asset("assets/orderease_logo.png", width: 28, height: 28),
         title: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, profileState) {
-            String shopName = 'Ramesh Store';
+            String shopName = 'OrderEase';
             if (profileState is ProfileLoadedState) {
               shopName = profileState.profile.shopName;
             }
             return Text(
               shopName,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
-                color: Color(0xFF1E6F5C),
+                color: primaryColor,
               ),
             );
           },
@@ -80,10 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 50,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE65100),
+                  backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.white,
                   elevation: 6,
-                  shadowColor: const Color(0xFFE65100).withOpacity(0.4),
+                  shadowColor: theme.colorScheme.primary.withOpacity(0.4),
                   padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
@@ -141,10 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Text(
                           entry.key,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E6F5C),
+                            color: primaryColor,
                           ),
                         ),
                       ),
@@ -198,11 +199,14 @@ class ViewModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(right: 16),
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFFEBEFEA),
+        color: isDark ? Colors.grey[900] : const Color(0xFFEBEFEA),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
@@ -213,13 +217,13 @@ class ViewModeToggle extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: !isGrouped ? const Color(0xFF1E6F5C) : Colors.transparent,
+                color: !isGrouped ? theme.colorScheme.primary : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.format_list_bulleted,
                 size: 20,
-                color: !isGrouped ? Colors.white : const Color(0xFF757575),
+                color: !isGrouped ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -229,13 +233,13 @@ class ViewModeToggle extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: isGrouped ? const Color(0xFF1E6F5C) : Colors.transparent,
+                color: isGrouped ? theme.colorScheme.primary : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.grid_view,
                 size: 20,
-                color: isGrouped ? Colors.white : const Color(0xFF757575),
+                color: isGrouped ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -259,21 +263,25 @@ class ItemQuantityCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
     final hasQty = quantity > 0;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         GestureDetector(
           onTap: hasQty ? onRemove : null,
           child: Container(
-            width: 32,
-            height: 32,
+            width: 34,
+            height: 34,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: cardColor,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: isDark ? Colors.black26 : Colors.black.withOpacity(0.06),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -281,8 +289,8 @@ class ItemQuantityCounter extends StatelessWidget {
             ),
             child: Icon(
               Icons.remove,
-              size: 16,
-              color: hasQty ? const Color(0xFF455A64) : Colors.grey[300],
+              size: 18,
+              color: hasQty ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
             ),
           ),
         ),
@@ -293,9 +301,9 @@ class ItemQuantityCounter extends StatelessWidget {
             child: Text(
               '$quantity',
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: hasQty ? const Color(0xFF1E6F5C) : Colors.grey[400],
+                color: hasQty ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
               ),
             ),
           ),
@@ -304,23 +312,23 @@ class ItemQuantityCounter extends StatelessWidget {
         GestureDetector(
           onTap: onAdd,
           child: Container(
-            width: 32,
-            height: 32,
+            width: 34,
+            height: 34,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: cardColor,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: isDark ? Colors.black26 : Colors.black.withOpacity(0.06),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.add,
-              size: 16,
-              color: Color(0xFF1E6F5C),
+              size: 18,
+              color: theme.colorScheme.primary,
             ),
           ),
         ),
@@ -357,16 +365,19 @@ class _ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
     final iconConfig = IconConstants.getIconConfig(item.iconId);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -380,12 +391,12 @@ class _ItemCard extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: iconConfig.backgroundColor,
+                color: isDark ? iconConfig.backgroundColor.withOpacity(0.2) : iconConfig.backgroundColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 iconConfig.icon,
-                color: iconConfig.foregroundColor,
+                color: isDark ? theme.colorScheme.primary : iconConfig.foregroundColor,
                 size: 24,
               ),
             ),
@@ -396,10 +407,10 @@ class _ItemCard extends StatelessWidget {
                 children: [
                   Text(
                     item.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A302B),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -407,7 +418,7 @@ class _ItemCard extends StatelessWidget {
                     _formatUnit(context, item.unit),
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey[500],
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],

@@ -409,6 +409,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Order details copied to clipboard!'**
   String get copiedToClipboardMessage;
+
+  /// No description provided for @preferencesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferencesSection;
+
+  /// No description provided for @languagePreference.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languagePreference;
+
+  /// No description provided for @themePreference.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themePreference;
+
+  /// No description provided for @editShopNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Shop Name'**
+  String get editShopNameTitle;
+
+  /// No description provided for @enterShopNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Shop Name'**
+  String get enterShopNameHint;
+
+  /// No description provided for @saveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveButton;
+
+  /// No description provided for @editSupplierPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Supplier WhatsApp'**
+  String get editSupplierPhoneTitle;
 }
 
 class _AppLocalizationsDelegate

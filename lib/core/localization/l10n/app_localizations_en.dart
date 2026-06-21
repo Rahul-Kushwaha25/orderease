@@ -166,4 +166,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copiedToClipboardMessage => 'Order details copied to clipboard!';
+
+  @override
+  String get preferencesSection => 'Preferences';
+
+  @override
+  String get languagePreference => 'Language';
+
+  @override
+  String get themePreference => 'Theme';
+
+  @override
+  String get editShopNameTitle => 'Edit Shop Name';
+
+  @override
+  String get enterShopNameHint => 'Enter Shop Name';
+
+  @override
+  String get saveButton => 'Save';
+
+  @override
+  String get editSupplierPhoneTitle => 'Edit Supplier WhatsApp';
 }

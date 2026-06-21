@@ -167,4 +167,25 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get copiedToClipboardMessage => 'ऑर्डर विवरण कॉपी कर लिया गया है!';
+
+  @override
+  String get preferencesSection => 'प्राथमिकताएं';
+
+  @override
+  String get languagePreference => 'भाषा';
+
+  @override
+  String get themePreference => 'थीम';
+
+  @override
+  String get editShopNameTitle => 'दुकान का नाम संपादित करें';
+
+  @override
+  String get enterShopNameHint => 'दुकान का नाम दर्ज करें';
+
+  @override
+  String get saveButton => 'सहेजें';
+
+  @override
+  String get editSupplierPhoneTitle => 'सप्लायर का व्हाट्सएप नंबर संपादित करें';
 }

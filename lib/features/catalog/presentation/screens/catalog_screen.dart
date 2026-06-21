@@ -24,40 +24,44 @@ class _CatalogScreenState extends State<CatalogScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9F7),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF8F9F7),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFF1E6F5C)),
-          onPressed: () {},
-        ),
-        title: Text(
-          l10n.catalogTitle,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: Color(0xFF1E6F5C),
+        // leading: IconButton(
+        //   icon: Icon(Icons.menu, color: primaryColor),
+        //   onPressed: () {},
+        // ),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            l10n.catalogTitle,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: primaryColor,
+            ),
           ),
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF1E6F5C)),
-            onPressed: () {},
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.shopping_cart_outlined, color: primaryColor),
+        //     onPressed: () {},
+        //   ),
+        // ],
+
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF1E6F5C),
-        foregroundColor: Colors.white,
+        backgroundColor: primaryColor,
+        foregroundColor: theme.colorScheme.onPrimary,
         elevation: 4,
         onPressed: () {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            backgroundColor: Colors.white,
+            backgroundColor: theme.colorScheme.surface,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),

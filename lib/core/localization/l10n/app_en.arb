@@ -1,6 +1,6 @@
 {
-  "appName": "DukaanOrder",
-  "homeTitle": "DukaanOrder",
+  "appName": "Order Ease",
+  "homeTitle": "Order Ease",
   "catalogTitle": "Item Catalog",
   "profileTitle": "Store Profile",
   "previewOrderButton": "Preview Order",
@@ -50,5 +50,12 @@
   "itemAddedMessage": "Item added to catalog!",
   "itemUpdatedMessage": "Item updated successfully!",
   "itemDeletedMessage": "Item deleted from catalog!",
-  "copiedToClipboardMessage": "Order details copied to clipboard!"
+  "copiedToClipboardMessage": "Order details copied to clipboard!",
+  "preferencesSection": "Preferences",
+  "languagePreference": "Language",
+  "themePreference": "Theme",
+  "editShopNameTitle": "Edit Shop Name",
+  "enterShopNameHint": "Enter Shop Name",
+  "saveButton": "Save",
+  "editSupplierPhoneTitle": "Edit Supplier WhatsApp"
 }

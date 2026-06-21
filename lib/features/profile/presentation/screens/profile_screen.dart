@@ -28,6 +28,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
+    final textColor = theme.colorScheme.onSurface;
+    final secondaryTextColor = theme.colorScheme.onSurfaceVariant;
+    final primaryColor = theme.colorScheme.primary;
     final authState = context.watch<AuthBloc>().state;
     String userName = '';
     String userEmail = '';
@@ -39,29 +45,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9F7),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF8F9F7),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xFF1E6F5C)),
-          onPressed: () {},
-        ),
-        title: Text(
-          l10n.profileTitle,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: Color(0xFF1E6F5C),
+        // leading: IconButton(
+        //   icon: Icon(Icons.menu, color: primaryColor),
+        //   onPressed: () {},
+        // ),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            l10n.profileTitle,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: primaryColor,
+            ),
           ),
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF1E6F5C)),
-            onPressed: () {},
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.shopping_cart_outlined, color: primaryColor),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
@@ -83,11 +89,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -99,10 +105,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           CircleAvatar(
                             radius: 36,
-                            backgroundColor: const Color(0xFFEFF1EE),
+                            backgroundColor: isDark ? Colors.grey[800] : const Color(0xFFEFF1EE),
                             backgroundImage: photoUrl != null && photoUrl.isNotEmpty ? NetworkImage(photoUrl) : null,
                             child: photoUrl == null || photoUrl.isEmpty
-                                ? const Icon(Icons.person, size: 36, color: Color(0xFF757575))
+                                ? Icon(Icons.person, size: 36, color: secondaryTextColor)
                                 : null,
                           ),
                           Positioned(
@@ -114,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               decoration: BoxDecoration(
                                 color: const Color(0xFF2E7D32),
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
+                                border: Border.all(color: cardColor, width: 2),
                               ),
                             ),
                           ),
@@ -127,22 +133,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             Text(
                               userName.isEmpty ? 'Ramesh Sharma' : userName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1A302B)),
+                                  color: textColor),
                             ),
                             const SizedBox(height: 6),
                             Row(
                               children: [
-                                const Icon(Icons.email_outlined, size: 16, color: Colors.grey),
+                                Icon(Icons.email_outlined, size: 16, color: secondaryTextColor),
                                 const SizedBox(width: 6),
                                 Expanded(
                                   child: Text(
                                     userEmail.isEmpty ? 'ramesh@gmail.com' : userEmail,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.grey,
+                                      color: secondaryTextColor,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -177,11 +183,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // Preferences Title
                 Text(
-                  l10n.localeName == 'hi' ? 'प्राथमिकताएं' : 'Preferences',
-                  style: const TextStyle(
+                  l10n.preferencesSection,
+                  style:  TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A302B),
+                    color: primaryColor,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -189,7 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Language Card
                 _buildPreferenceCard(
                   icon: Icons.language,
-                  title: l10n.localeName == 'hi' ? 'भाषा' : 'Language',
+                  title: l10n.languagePreference,
                   trailing: CustomSegmentedToggle<String>(
                     options: const ['en', 'hi'],
                     selectedOption: profile.languageCode,
@@ -210,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFF757575),
+                          color: isSelected ? primaryColor : const Color(0xFF757575),
                         ),
                       );
                     },
@@ -221,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Theme Card
                 _buildPreferenceCard(
                   icon: Icons.palette_outlined,
-                  title: l10n.localeName == 'hi' ? 'थीम' : 'Theme',
+                  title: l10n.themePreference,
                   trailing: CustomSegmentedToggle<String>(
                     options: const ['light', 'dark'],
                     selectedOption: profile.themeMode,
@@ -244,7 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Icon(
                             isLight ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
                             size: 15,
-                            color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFF757575),
+                            color: isSelected ? primaryColor : const Color(0xFF757575),
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -252,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? const Color(0xFF1E6F5C) : const Color(0xFF757575),
+                              color: isSelected ? primaryColor : const Color(0xFF757575),
                             ),
                           ),
                         ],
@@ -267,34 +273,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     context.read<AuthBloc>().add(const SignOutRequested());
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFEBEE),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFFFEBEE).withOpacity(0.4),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.logout, color: Color(0xFFD32F2F)),
+                      const SizedBox(width: 8),
+                      Text(
+                        l10n.signOutButton,
+                        style: const TextStyle(
+                          color: Color(0xFFD32F2F),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.logout, color: Color(0xFFD32F2F)),
-                        const SizedBox(width: 8),
-                        Text(
-                          l10n.signOutButton,
-                          style: const TextStyle(
-                            color: Color(0xFFD32F2F),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -313,60 +305,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String value,
     required VoidCallback onEdit,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+    return Builder(
+      builder: (context) {
+        final theme = Theme.of(context);
+        final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
+        final isDark = theme.brightness == Brightness.dark;
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F0),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: const Color(0xFF757575), size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey[850] : const Color(0xFFF1F3F0),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A302B),
-                  ),
+                child: Icon(icon, color: theme.colorScheme.onSurfaceVariant, size: 22),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                icon: Icon(Icons.edit_outlined, color: theme.colorScheme.onSurfaceVariant),
+                onPressed: onEdit,
+              ),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Colors.grey),
-            onPressed: onEdit,
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 
@@ -375,56 +374,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String title,
     required Widget trailing,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: const Color(0xFF757575), size: 22),
-              const SizedBox(width: 16),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1A302B),
-                ),
+    return Builder(
+      builder: (context) {
+        final theme = Theme.of(context);
+        final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
+        final isDark = theme.brightness == Brightness.dark;
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-          trailing,
-        ],
-      ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: theme.colorScheme.onSurfaceVariant, size: 22),
+                  const SizedBox(width: 16),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              trailing,
+            ],
+          ),
+        );
+      }
     );
   }
 
   void _editShopName(BuildContext context, ProfileEntity profile) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final controller = TextEditingController(text: profile.shopName);
     showDialog(
       context: context,
       builder: (dCtx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(l10n.localeName == 'hi' ? 'दुकान का नाम संपादित करें' : 'Edit Shop Name', style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A302B))),
+        title: Text(l10n.editShopNameTitle, style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
         content: TextField(
           controller: controller,
+          style: TextStyle(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
-            hintText: l10n.localeName == 'hi' ? 'दुकान का नाम दर्ज करें' : 'Enter Shop Name',
-            fillColor: const Color(0xFFF1F3F0),
+            hintText: l10n.enterShopNameHint,
+            hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6)),
+            fillColor: isDark ? Colors.grey[850] : const Color(0xFFF1F3F0),
             filled: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
@@ -436,12 +446,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dCtx),
-            child: Text(l10n.cancelButton, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+            child: Text(l10n.cancelButton, style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1E6F5C),
-              foregroundColor: Colors.white,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -455,7 +465,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ));
               Navigator.pop(dCtx);
             },
-            child: Text(l10n.localeName == 'hi' ? 'सहेजें' : 'Save', style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(l10n.saveButton, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -464,19 +474,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _editSupplierPhone(BuildContext context, ProfileEntity profile) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final controller = TextEditingController(text: profile.supplierPhone);
     showDialog(
       context: context,
       builder: (dCtx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(l10n.localeName == 'hi' ? 'सप्लायर का व्हाट्सएप नंबर संपादित करें' : 'Edit Supplier WhatsApp', style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A302B))),
+        title: Text(l10n.editSupplierPhoneTitle, style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.phone,
+          style: TextStyle(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: '+91xxxxxxxxxx',
-            fillColor: const Color(0xFFF1F3F0),
+            hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withOpacity(0.6)),
+            fillColor: isDark ? Colors.grey[850] : const Color(0xFFF1F3F0),
             filled: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
@@ -488,12 +502,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dCtx),
-            child: Text(l10n.cancelButton, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+            child: Text(l10n.cancelButton, style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1E6F5C),
-              foregroundColor: Colors.white,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () {
@@ -507,7 +521,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ));
               Navigator.pop(dCtx);
             },
-            child: Text(l10n.localeName == 'hi' ? 'सहेजें' : 'Save', style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(l10n.saveButton, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -531,10 +545,14 @@ class CustomSegmentedToggle<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
+
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF1EE),
+        color: isDark ? Colors.black26 : const Color(0xFFEFF1EE),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
@@ -546,12 +564,12 @@ class CustomSegmentedToggle<T> extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white : Colors.transparent,
+                color: isSelected ? cardColor : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: isDark ? Colors.black26 : Colors.black.withOpacity(0.06),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         )

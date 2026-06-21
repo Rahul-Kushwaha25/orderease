@@ -15,16 +15,18 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconConfig = IconConstants.getIconConfig(item.iconId);
-    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardColor = theme.cardTheme.color ?? theme.colorScheme.surface;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -36,36 +38,36 @@ class ItemCard extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: iconConfig.backgroundColor,
+            color: isDark ? iconConfig.backgroundColor.withOpacity(0.2) : iconConfig.backgroundColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
             iconConfig.icon,
-            color: iconConfig.foregroundColor,
+            color: isDark ? theme.colorScheme.primary : iconConfig.foregroundColor,
             size: 24,
           ),
         ),
         title: Text(
           item.name,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
-            color: Color(0xFF1A302B),
+            color: theme.colorScheme.onSurface,
           ),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4.0),
           child: Text(
             '₹${item.price.toStringAsFixed(0)} / ${item.unit}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1E6F5C),
+              color: theme.colorScheme.primary,
             ),
           ),
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.more_vert, color: Color(0xFF555555)),
+          icon: Icon(Icons.more_vert, color: theme.colorScheme.onSurfaceVariant),
           onPressed: () => _showOptions(context),
         ),
         onTap: () => _showOptions(context),
@@ -75,9 +77,11 @@ class ItemCard extends StatelessWidget {
 
   void _showOptions(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -91,21 +95,21 @@ class ItemCard extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: isDark ? Colors.grey[800] : Colors.grey[300],
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.edit, color: Color(0xFF1E6F5C)),
+              leading: Icon(Icons.edit, color: theme.colorScheme.primary),
               title: Text(l10n.editItemButton, style: const TextStyle(fontWeight: FontWeight.w600)),
               onTap: () {
                 Navigator.pop(bCtx);
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  backgroundColor: Colors.white,
+                  backgroundColor: theme.colorScheme.surface,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   ),
@@ -129,17 +133,18 @@ class ItemCard extends StatelessWidget {
 
   void _showConfirmDelete(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (dCtx) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(l10n.deleteConfirmTitle, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A302B))),
+        title: Text(l10n.deleteConfirmTitle, style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
         content: Text(l10n.deleteConfirmMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dCtx),
-            child: Text(l10n.cancelButton, style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w600)),
+            child: Text(l10n.cancelButton, style: TextStyle(color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
